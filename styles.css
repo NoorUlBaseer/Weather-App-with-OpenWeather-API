@@ -1,0 +1,135 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f5;
+    margin: 0;
+    padding: 20px; /* Added padding for spacing */
+    display: block; /* Changed from flex to block for normal flow */
+    min-height: 100vh; /* Allow body height to grow beyond viewport */
+}
+
+/* Main container for layout */
+.main-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto; /* Center container horizontally */
+    text-align: center;
+}
+
+/* Current Weather Box */
+.current-weather-box {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Forecast Table */
+.forecast-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.forecast-table th, .forecast-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.forecast-table th {
+    background-color: #007bff;
+    color: white;
+}
+
+.forecast-table td {
+    text-align: center;
+}
+
+/* Pagination buttons */
+.pagination {
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Search Bar */
+.search-bar {
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 70%;
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 10px;
+    }
+
+    .search-bar input {
+        width: 90%;
+    }
+
+    .forecast-table th, .forecast-table td {
+        padding: 8px;
+    }
+
+    .pagination button {
+        padding: 8px 15px;
+    }
+}
+
+/* Current Weather Box */
+.current-weather-box {
+    background-color: rgba(255, 255, 255, 0.8); /* Add slight transparency for readability */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* Positioning for child elements */
+}
+
+.current-weather-box p {
+    position: relative; /* Ensure text is above the background */
+    z-index: 1; /* Bring text in front of the background */
+}

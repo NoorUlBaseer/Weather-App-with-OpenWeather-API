@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Search bar at the top -->
+        <div class="search-bar">
+            <input type="text" id="cityInput" placeholder="Enter city name" />
+            <button onclick="searchWeather()">Search</button>
+        </div>
+
+        <!-- Current Weather Box -->
+        <div class="current-weather-box">
+            <h2>Current Location Weather</h2>
+            <div id="weather" class="weather-info"></div>
+        </div>
+
+        <!-- 5-Day Forecast Table -->
+        <div class="forecast-container">
+            <h3>5-Day Weather Forecast</h3>
+            <table id="forecastTable" class="forecast-table">
+                <thead>
+                    <tr>
+                        <th>Date/Time</th>
+                        <th>Weather</th>
+                        <th>Temperature (°C)</th>
+                        <th>Wind Speed (m/s)</th>
+                    </tr>
+                </thead>
+                <tbody id="forecastBody">
+                    <!-- Data will be injected dynamically -->
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button id="prevBtn" disabled>Previous</button>
+                <span id="pageInfo">Page 1</span>
+                <button id="nextBtn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
