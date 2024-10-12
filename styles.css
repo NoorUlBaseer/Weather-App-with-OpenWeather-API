@@ -18,11 +18,18 @@ body {
 
 /* Current Weather Box */
 .current-weather-box {
-    background-color: #ffffff;
+    /*background-color: rgba(0, 0, 0, 0.4);*/
+    background-color: #0066b2;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    position: relative; /* Positioning for child elements */
+}
+
+.current-weather-box p {
+    position: relative; /* Ensure text is above the background */
+    z-index: 1; /* Bring text in front of the background */
 }
 
 /* Forecast Table */
@@ -33,29 +40,39 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.forecast-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+/* Forecast Grid */
+.forecast-grid {
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(2, 1fr); /* Fixed three columns */
+    gap: 10px; /* Space between boxes */
+    margin: 10px auto; /* Center the grid with auto margin */
+    max-width: 900px; /* Set a maximum width to limit the grid size */
 }
 
-.forecast-table th, .forecast-table td {
-    padding: 12px;
-    border: 1px solid #ddd;
+.forecast-box {
+    /*background-color: rgba(0, 0, 0, 0.2);*/
+    background-color: #A3C1AD;
+    color: black; /* Text color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px; /* Inner spacing */
+    text-align: left; /* Align text to the left */
+    position: relative; /* Make it relative to position the icon */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    transition: transform 0.2s; /* Transition effect */
 }
 
-.forecast-table th {
-    background-color: #007bff;
-    color: white;
+.forecast-box:hover {
+    transform: translateY(-3px);
 }
 
-.forecast-table td {
-    text-align: center;
-}
-
-/* Pagination buttons */
-.pagination {
-    margin-top: 20px;
+/* Forecast Icon */
+.forecast-icon {
+    position: absolute;
+    right: 10px; /* Align the icon to the right */
+    top: 50%;
+    transform: translateY(-50%); /* Vertically center the icon */
+    width: 150px; /* Set icon size */
+    height: 150px; /* Set icon size */
 }
 
 .pagination button {
@@ -117,19 +134,4 @@ body {
     .pagination button {
         padding: 8px 15px;
     }
-}
-
-/* Current Weather Box */
-.current-weather-box {
-    background-color: rgba(255, 255, 255, 0.8); /* Add slight transparency for readability */
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative; /* Positioning for child elements */
-}
-
-.current-weather-box p {
-    position: relative; /* Ensure text is above the background */
-    z-index: 1; /* Bring text in front of the background */
 }

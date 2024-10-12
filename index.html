@@ -23,27 +23,13 @@
         <!-- 5-Day Forecast Table -->
         <div class="forecast-container">
             <h3>5-Day Weather Forecast</h3>
-            <table id="forecastTable" class="forecast-table">
-                <thead>
-                    <tr>
-                        <th>Date/Time</th>
-                        <th>Weather</th>
-                        <th>Temperature (°C)</th>
-                        <th>Wind Speed (m/s)</th>
-                    </tr>
-                </thead>
-                <tbody id="forecastBody">
-                    <!-- Data will be injected dynamically -->
-                </tbody>
-            </table>
-
-            <!-- Pagination -->
+            <div id="forecastGrid" class="forecast-grid"></div> <!-- Updated from table to grid -->
             <div class="pagination">
                 <button id="prevBtn" disabled>Previous</button>
                 <span id="pageInfo">Page 1</span>
                 <button id="nextBtn">Next</button>
             </div>
-        </div>
+        </div>        
     </div>
 
     <script src="script.js"></script>

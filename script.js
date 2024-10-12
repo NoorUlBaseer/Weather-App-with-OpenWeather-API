@@ -3,6 +3,11 @@ let forecastData = [];
 let currentPage = 1;
 const itemsPerPage = 10;
 
+// Helper function to capitalize the first letter of each word
+function capitalizeFirstLetterOfEachWord(str) {
+    return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
 // Function to get current location weather
 function getWeather(lat, lon) {
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
@@ -22,9 +27,14 @@ function getWeather(lat, lon) {
 // Function to update the UI for current weather
 function updateCurrentWeatherUI(data) {
     const weatherElement = document.getElementById('weather');
-    const description = data.weather[0].description;
+    const description = capitalizeFirstLetterOfEachWord(data.weather[0].description);
     const tempCelsius = (data.main.temp - 273.15).toFixed(2);
+    const windSpeed = data.wind.speed;
     const location = data.name;
+
+    // Update the forecast heading
+    const forecastHeading = document.querySelector('.forecast-container h3');
+    forecastHeading.innerHTML = `5-Day Weather Forecast of ${location}`;
 
     // Get the icon code from the response
     const iconCode = data.weather[0].icon; // e.g., "01d"
@@ -38,12 +48,12 @@ function updateCurrentWeatherUI(data) {
     weatherBox.style.backgroundRepeat = 'no-repeat'; // Prevent image repetition
     weatherBox.style.color = 'white'; // Change text color for visibility
     weatherBox.style.padding = '20px'; // Ensure content inside the box is well padded
-    weatherBox.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Add a slight overlay to enhance readability
 
     weatherElement.innerHTML = `
         <p><strong>Location:</strong> ${location}</p>
         <p><strong>Weather:</strong> ${description}</p>
         <p><strong>Temperature:</strong> ${tempCelsius} °C</p>
+        <p><strong>Wind Speed::</strong> ${windSpeed} m/s</p>
     `;
 }
 
@@ -62,12 +72,12 @@ function get5DayForecast(lat, lon) {
         });
 }
 
-// Function to display forecast with pagination
+// Function to display forecast with boxes instead of table
 function displayForecast(page) {
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    const forecastBody = document.getElementById('forecastBody');
-    forecastBody.innerHTML = ''; // Clear previous data
+    const forecastGrid = document.getElementById('forecastGrid'); // Make sure this element exists
+    forecastGrid.innerHTML = ''; // Clear previous data
 
     const paginatedData = forecastData.slice(start, end);
     paginatedData.forEach(entry => {
@@ -75,19 +85,27 @@ function displayForecast(page) {
         const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
         const formattedDate = date.toLocaleString('en-PK', options).replace(',', ''); // Format to "DD-MM-YYYY HH:MM AM"
         
-        const description = entry.weather[0].description;
+        const description = capitalizeFirstLetterOfEachWord(entry.weather[0].description);
         const tempCelsius = (entry.main.temp - 273.15).toFixed(2);
         const windSpeed = entry.wind.speed;
 
-        const row = `
-            <tr>
-                <td>${formattedDate}</td>
-                <td>${description}</td>
-                <td>${tempCelsius} °C</td>
-                <td>${windSpeed} m/s</td>
-            </tr>
+        // Get the weather icon from the API
+        const iconCode = entry.weather[0].icon;
+        const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+        // Create forecast box structure
+        const box = document.createElement('div');
+        box.classList.add('forecast-box');
+        box.innerHTML = `
+            <p><strong>Date:</strong> ${formattedDate}</p>
+            <p><strong>Weather:</strong> ${description}</p>
+            <p><strong>Temperature:</strong> ${tempCelsius} °C</p>
+            <p><strong>Wind Speed:</strong> ${windSpeed} m/s</p>
+            <img src="${iconUrl}" class="forecast-icon" alt="Weather Icon">
         `;
-        forecastBody.innerHTML += row;
+
+        // Append the forecast box to the grid
+        forecastGrid.appendChild(box);
     });
 
     // Update pagination buttons
@@ -156,3 +174,10 @@ function getWeatherByCity(city) {
 window.onload = function() {
     getLocation();
 };
+
+// Add an event listener to the input field for the Enter key
+document.getElementById('cityInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        searchWeather(); // Call the searchWeather function when Enter is pressed
+    }
+});
