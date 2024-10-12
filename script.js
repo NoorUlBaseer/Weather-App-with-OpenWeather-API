@@ -53,7 +53,7 @@ function updateCurrentWeatherUI(data) {
         <p><strong>Location:</strong> ${location}</p>
         <p><strong>Weather:</strong> ${description}</p>
         <p><strong>Temperature:</strong> ${tempCelsius} °C</p>
-        <p><strong>Wind Speed::</strong> ${windSpeed} m/s</p>
+        <p><strong>Wind Speed:</strong> ${windSpeed} m/s</p>
     `;
 }
 

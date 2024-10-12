@@ -8,6 +8,51 @@ body {
     min-height: 100vh; /* Allow body height to grow beyond viewport */
 }
 
+/* Search Bar Styles */
+.search-bar {
+    display: flex;
+    justify-content: center; /* Center-align the search bar */
+    margin-bottom: 30px;
+}
+
+.search-bar input {
+    padding: 12px 20px; /* Increased padding for better aesthetics */
+    font-size: 16px;
+    border-radius: 50px; /* Rounded corners for input */
+    border: 1px solid #007bff; /* Border color matching the button */
+    width: 60%; /* Adjust width of input */
+    transition: box-shadow 0.3s ease, border 0.3s ease; /* Smooth transitions */
+    outline: none; /* Remove outline on focus */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+}
+
+.search-bar input:focus {
+    border-color: #0056b3; /* Change border color on focus */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); /* Add glow effect */
+}
+
+.search-bar button {
+    padding: 12px 30px; /* Increased padding for a larger button */
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50px; /* Rounded button */
+    cursor: pointer;
+    margin-left: 10px; /* Space between input and button */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+}
+
+.search-bar button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); /* Shadow on hover */
+}
+
+.search-bar button:focus {
+    outline: none; /* Remove button outline on focus */
+}
+
 /* Main container for layout */
 .main-container {
     max-width: 800px;
@@ -19,7 +64,7 @@ body {
 /* Current Weather Box */
 .current-weather-box {
     /*background-color: rgba(0, 0, 0, 0.4);*/
-    background-color: #0066b2;
+    background-color: #6050DC;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 30px;
@@ -51,18 +96,22 @@ body {
 
 .forecast-box {
     /*background-color: rgba(0, 0, 0, 0.2);*/
-    background-color: #A3C1AD;
+    background-color: #00CED1;
     color: black; /* Text color */
     border-radius: 8px; /* Rounded corners */
     padding: 15px; /* Inner spacing */
     text-align: left; /* Align text to the left */
     position: relative; /* Make it relative to position the icon */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-    transition: transform 0.2s; /* Transition effect */
+    transition: transform 0.3s; /* Transition effect */
+    margin-bottom: 30px; /* Increased vertical space */
+    margin-right: 3%; /* Increased horizontal space */
+    display: inline-block;
+    text-align: left; /* Left-align the text */
 }
 
 .forecast-box:hover {
-    transform: translateY(-3px);
+    transform: translateY(-15px);
 }
 
 /* Forecast Icon */
@@ -88,33 +137,6 @@ body {
 .pagination button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-}
-
-/* Search Bar */
-.search-bar {
-    margin-bottom: 20px;
-}
-
-.search-bar input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    width: 70%;
-}
-
-.search-bar button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.search-bar button:hover {
-    background-color: #0056b3;
 }
 
 /* Media Query for smaller screens */
