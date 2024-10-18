@@ -8,6 +8,7 @@ body {
     min-height: 100vh; /* Allow body height to grow beyond viewport */
     position: relative;
     overflow-x: hidden; /* Prevent horizontal scrolling */
+    background: linear-gradient(to left, #8676cd, #cf7fc7, #e7d49c);
 }
 
 .side-pane {
@@ -263,10 +264,10 @@ input:checked + .switch, input:checked + .switch2 {
     width: 30%;
     max-width: 400px;
     margin: 0 1.5%;
-    background-color: rgba(96, 80, 220, 0.1); /* Light purple background */
+    background-color: rgba(96, 80, 220, 0.3); /* Light purple background */
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .chart-box canvas {

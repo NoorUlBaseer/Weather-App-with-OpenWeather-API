@@ -377,8 +377,8 @@ function createBarChart(averageTemperatures) {
             datasets: [{
                 label: 'Average Temperature (°C)',
                 data: data,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                borderColor: 'rgba(255, 206, 86, 1)',
                 borderWidth: 1
             }]
         },
@@ -574,7 +574,8 @@ function createLineChart(averageTemperatures) {
                 label: 'Temperature (°C)',
                 data: data,
                 fill: false,
-                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                borderColor: 'rgba(255, 206, 86, 1)',
                 tension: 0.1 // Smooth the line
             }]
         },
