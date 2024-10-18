@@ -8,6 +8,8 @@ const itemsPerPage = 10;
 let chatbotCurrentWeather = null;
 let chatbotForecastData = [];
 
+let isCelsius = true; // Global variable to track the temperature unit
+
 // Import Gemini API in script.js
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -115,7 +117,7 @@ function get5DayForecast(lat, lon) {
 }
 
 // Function to display forecast with boxes instead of table
-function displayForecast(page) {
+function displayForecast(page, isCelsius = true) {
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const forecastGrid = document.getElementById('forecastGrid'); // Make sure this element exists
@@ -128,7 +130,11 @@ function displayForecast(page) {
         const formattedDate = date.toLocaleString('en-PK', options).replace(',', ''); // Format to "DD-MM-YYYY HH:MM AM"
         
         const description = capitalizeFirstLetterOfEachWord(entry.weather[0].description);
-        const tempCelsius = (entry.main.temp - 273.15).toFixed(2);
+        
+        // Convert temperature based on the selected unit
+        const tempKelvin = entry.main.temp;
+        const temp = isCelsius ? (tempKelvin - 273.15).toFixed(2) : ((tempKelvin - 273.15) * 9/5 + 32).toFixed(2);
+
         const windSpeed = entry.wind.speed;
 
         // Get the weather icon from the API
@@ -141,7 +147,7 @@ function displayForecast(page) {
         box.innerHTML = `
             <p><strong>Date:</strong> ${formattedDate}</p>
             <p><strong>Weather:</strong> ${description}</p>
-            <p><strong>Temperature:</strong> ${tempCelsius} °C</p>
+            <p><strong>Temperature:</strong> ${temp} °${isCelsius ? 'C' : 'F'}</p>
             <p><strong>Wind Speed:</strong> ${windSpeed} m/s</p>
             <img src="${iconUrl}" class="forecast-icon" alt="Weather Icon">
         `;
@@ -160,14 +166,14 @@ function displayForecast(page) {
 document.getElementById('prevBtn').addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
-        displayForecast(currentPage);
+        displayForecast(currentPage, isCelsius); // Use the global temperature unit variable
     }
 });
 
 document.getElementById('nextBtn').addEventListener('click', () => {
     if (currentPage * itemsPerPage < forecastData.length) {
         currentPage++;
-        displayForecast(currentPage);
+        displayForecast(currentPage, isCelsius); // Use the global temperature unit variable
     }
 });
 
@@ -180,7 +186,7 @@ document.getElementById('ascendingButton').addEventListener('click', () => {
     currentPage = 1; 
     
     // Display the forecast in ascending order
-    displayForecast(currentPage);
+    displayForecast(currentPage, isCelsius); // Use the global temperature unit variable
 });
 
 // Event listener for the sorting forecast boxes in descending order
@@ -192,7 +198,7 @@ document.getElementById('descendingButton').addEventListener('click', () => {
     currentPage = 1; 
     
     // Display the forecast in descending order
-    displayForecast(currentPage);
+    displayForecast(currentPage, isCelsius); // Use the global temperature unit variable
 });
 
 // Event listener for the filtering rainy days in the forecast
@@ -207,7 +213,7 @@ document.getElementById('filterRainyDaysButton').addEventListener('click', () =>
     if (rainyDays.length > 0) {
         forecastData = rainyDays; // Update the forecastData with only rainy entries
         currentPage = 1; // Reset to the first page
-        displayForecast(currentPage); // Display the filtered forecast
+        displayForecast(currentPage, isCelsius); // Use the global temperature unit variable
     } else {
         alert('No rainy days found in the forecast.');
     }
@@ -224,7 +230,7 @@ document.getElementById('highestTempButton').addEventListener('click', () => {
     currentPage = 1; // Reset to the first page
 
     // Display the forecast with the highest temperature
-    displayForecast(currentPage);
+    displayForecast(currentPage, isCelsius); // Use the global temperature unit variable
 });
 
 // Event listener for the reseting forecast boxes in default order
@@ -236,7 +242,7 @@ document.getElementById('resetButton').addEventListener('click', () => {
     currentPage = 1; 
     
     // Display the forecast in default order
-    displayForecast(currentPage);
+    displayForecast(currentPage, isCelsius); // Use the global temperature unit variable
 });
 
 // Get current location and load weather
@@ -703,4 +709,12 @@ document.getElementById('unit-toggle').addEventListener('change', function() {
         // Update the current weather UI
         updateCurrentWeatherUI(currentWeatherData, isCelsius);
     }
+});
+
+// Event listener for the toggle switch on the tables page
+document.getElementById('unit-toggle2').addEventListener('change', function() {
+    isCelsius = this.checked; // true if Celsius, false if Fahrenheit
+
+    // Update the forecast display based on the selected unit
+    displayForecast(currentPage, isCelsius);
 });
