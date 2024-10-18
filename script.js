@@ -1,7 +1,30 @@
 const apiKey = '162313a01ef4e4c6097184872641259a'; // Your API Key
 let forecastData = [];
+let unsortedForecastData = [];
 let currentPage = 1;
 const itemsPerPage = 10;
+
+// New variables for chatbot
+let chatbotCurrentWeather = null;
+let chatbotForecastData = [];
+
+// Import Gemini API in script.js
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// Initialize the Gemini AI model
+const geminiAPIKey = "AIzaSyBDTGpzMbqUnfbP_bNIFKwKTvjEm9WzZn4";
+const genAI = new GoogleGenerativeAI(geminiAPIKey);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+document.getElementById('dashboardButton').addEventListener('click', () => {
+    document.getElementById('dashboardPage').style.display = 'block'; // Show the dashboard page
+    document.getElementById('tablesPage').style.display = 'none'; // Hide the tables page
+});
+
+document.getElementById('tablesButton').addEventListener('click', () => {
+    document.getElementById('dashboardPage').style.display = 'none'; // Hide the dashboard page
+    document.getElementById('tablesPage').style.display = 'block'; // Show the tables page
+});
 
 // Helper function to capitalize the first letter of each word
 function capitalizeFirstLetterOfEachWord(str) {
@@ -15,6 +38,7 @@ function getWeather(lat, lon) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
+            chatbotCurrentWeather = data; // Save the current weather data for chatbot
             updateCurrentWeatherUI(data);
             get5DayForecast(lat, lon);
         })
@@ -25,10 +49,14 @@ function getWeather(lat, lon) {
 }
 
 // Function to update the UI for current weather
-function updateCurrentWeatherUI(data) {
+function updateCurrentWeatherUI(data, isCelsius = true) {
     const weatherElement = document.getElementById('weather');
     const description = capitalizeFirstLetterOfEachWord(data.weather[0].description);
-    const tempCelsius = (data.main.temp - 273.15).toFixed(2);
+    
+    // Convert temperature based on the selected unit
+    const tempKelvin = data.main.temp;
+    const temp = isCelsius ? (tempKelvin - 273.15).toFixed(2) : ((tempKelvin - 273.15) * 9/5 + 32).toFixed(2);
+
     const windSpeed = data.wind.speed;
     const location = data.name;
 
@@ -43,7 +71,7 @@ function updateCurrentWeatherUI(data) {
     // Set the background image for the current weather box
     const weatherBox = document.querySelector('.current-weather-box');
     weatherBox.style.backgroundImage = `url(${iconUrl})`;
-    weatherBox.style.backgroundSize = '150px'; // Limit the size of the icon
+    weatherBox.style.backgroundSize = '200px'; // Limit the size of the icon
     weatherBox.style.backgroundPosition = 'right 20px top 5px'; // Position the icon nicely
     weatherBox.style.backgroundRepeat = 'no-repeat'; // Prevent image repetition
     weatherBox.style.color = 'white'; // Change text color for visibility
@@ -52,7 +80,7 @@ function updateCurrentWeatherUI(data) {
     weatherElement.innerHTML = `
         <p><strong>Location:</strong> ${location}</p>
         <p><strong>Weather:</strong> ${description}</p>
-        <p><strong>Temperature:</strong> ${tempCelsius} °C</p>
+        <p><strong>Temperature:</strong> ${temp} °${isCelsius ? 'C' : 'F'}</p>
         <p><strong>Wind Speed:</strong> ${windSpeed} m/s</p>
     `;
 }
@@ -65,6 +93,8 @@ function get5DayForecast(lat, lon) {
         .then(response => response.json())
         .then(data => {
             forecastData = data.list;
+            unsortedForecastData = [...forecastData]; // Save a copy of the original data
+            chatbotForecastData = [...forecastData]; // Store forecast data for chatbot
             displayForecast(currentPage);
 
             // Calculate daily averages
@@ -141,6 +171,74 @@ document.getElementById('nextBtn').addEventListener('click', () => {
     }
 });
 
+// Event listener for the sorting forecast boxes in ascending order
+document.getElementById('ascendingButton').addEventListener('click', () => {
+    // Sort the forecast data in ascending order by temperature
+    forecastData.sort((a, b) => a.main.temp - b.main.temp);
+    
+    // Reset to page 1 when the forecast is sorted
+    currentPage = 1; 
+    
+    // Display the forecast in ascending order
+    displayForecast(currentPage);
+});
+
+// Event listener for the sorting forecast boxes in descending order
+document.getElementById('descendingButton').addEventListener('click', () => {
+    // Sort the forecast data in descending order by temperature
+    forecastData.sort((a, b) => b.main.temp - a.main.temp);
+    
+    // Reset to page 1 when the forecast is sorted
+    currentPage = 1; 
+    
+    // Display the forecast in descending order
+    displayForecast(currentPage);
+});
+
+// Event listener for the filtering rainy days in the forecast
+document.getElementById('filterRainyDaysButton').addEventListener('click', () => {
+    // Filter the forecast data for rainy days
+    const rainyDays = forecastData.filter(entry => {
+        const description = entry.weather[0].description.toLowerCase();
+        return description.includes('rain') && !description.includes('thunderstorm') && !description.includes('drizzle');
+    });
+    
+    // If there are rainy days, display them, otherwise show a message
+    if (rainyDays.length > 0) {
+        forecastData = rainyDays; // Update the forecastData with only rainy entries
+        currentPage = 1; // Reset to the first page
+        displayForecast(currentPage); // Display the filtered forecast
+    } else {
+        alert('No rainy days found in the forecast.');
+    }
+});
+
+document.getElementById('highestTempButton').addEventListener('click', () => {
+    // Use the reduce() method to find the entry with the highest temperature.
+    const highestTemp = forecastData.reduce((acc, entry) => {
+        return entry.main.temp > acc.main.temp ? entry : acc;
+    });
+
+    // Display the entry with the highest temperature
+    forecastData = [highestTemp]; // Update the forecastData with only the highest temperature entry
+    currentPage = 1; // Reset to the first page
+
+    // Display the forecast with the highest temperature
+    displayForecast(currentPage);
+});
+
+// Event listener for the reseting forecast boxes in default order
+document.getElementById('resetButton').addEventListener('click', () => {
+    // Reset the forecast data to the original order
+    forecastData = [...unsortedForecastData];
+    
+    // Reset to page 1 when the forecast is reset
+    currentPage = 1; 
+    
+    // Display the forecast in default order
+    displayForecast(currentPage);
+});
+
 // Get current location and load weather
 function getLocation() {
     if (navigator.geolocation) {
@@ -156,9 +254,24 @@ function getLocation() {
     }
 }
 
+document.getElementById('searchButton').addEventListener('click', searchWeather);
+
 // Function to search weather by city name (fallback or on-demand)
 function searchWeather() {
     const city = document.getElementById('cityInput').value;
+    if (city) {
+        currentPage = 1; // Reset to page 1 when a new city is searched
+        getWeatherByCity(city);
+    } else {
+        alert('Please enter a city name.');
+    }
+}
+
+document.getElementById('searchButton2').addEventListener('click', searchWeather2);
+
+// Function to search weather by city name (fallback or on-demand)
+function searchWeather2() {
+    const city = document.getElementById('cityInput2').value;
     if (city) {
         currentPage = 1; // Reset to page 1 when a new city is searched
         getWeatherByCity(city);
@@ -174,6 +287,7 @@ function getWeatherByCity(city) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
+            chatbotCurrentWeather = data; // Save the current weather data for chatbots
             updateCurrentWeatherUI(data);
             get5DayForecast(data.coord.lat, data.coord.lon);
         })
@@ -192,6 +306,13 @@ window.onload = function() {
 document.getElementById('cityInput').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
         searchWeather(); // Call the searchWeather function when Enter is pressed
+    }
+});
+
+// Add an event listener to the input field for the Enter key
+document.getElementById('cityInput2').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        searchWeather2(); // Call the searchWeather function when Enter is pressed
     }
 });
 
@@ -256,6 +377,10 @@ function createBarChart(averageTemperatures) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 1,
+
             scales: {
                 y: {
                     beginAtZero: true,
@@ -448,6 +573,10 @@ function createLineChart(averageTemperatures) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 1,
+            
             scales: {
                 y: {
                     beginAtZero: true,
@@ -466,3 +595,112 @@ function createLineChart(averageTemperatures) {
         }
     });
 }
+
+// Add the chatbot functions to the existing script
+
+// Function to handle chatbot input and send response
+async function handleUserInput(input) {
+    const messagesContainer = document.getElementById('chatbotMessages');
+    const userMessageElement = document.createElement('div');
+    userMessageElement.className = 'user-message'; // Set class for user message
+    userMessageElement.textContent = `${input}`;
+    messagesContainer.appendChild(userMessageElement);
+
+    // Check for weather-related queries
+    if (input.toLowerCase().includes('weather') || input.toLowerCase().includes('forecast')) {
+        const weatherResponse = handleWeatherQuery(input);  // Call the weather query handler
+        sendChatbotResponse(weatherResponse);
+    } else {
+        // Use Gemini API for non-weather queries
+        const result = await model.generateContent(input);
+        sendChatbotResponse(result.response.text());
+    }
+
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Handle Weather Queries in Chatbot
+function handleWeatherQuery(input) {
+    if (!chatbotCurrentWeather || !chatbotForecastData || chatbotForecastData.length === 0) {
+        return "I don't have any weather data at the moment. Try searching for a city first.";
+    }
+
+    input = input.toLowerCase();
+
+    if (input.includes('current temperature') || input.includes('temperature now')) {
+        return `The current temperature is ${(chatbotCurrentWeather.main.temp - 273.15).toFixed(2)}°C.`;
+    }
+
+    if (input.includes('highest temperature') || input.includes('max temperature')) {
+        const highestTemp = Math.max(...chatbotForecastData.map(entry => entry.main.temp));
+        return `The highest forecasted temperature is ${(highestTemp - 273.15).toFixed(2)}°C.`;
+    }
+
+    if (input.includes('lowest temperature') || input.includes('min temperature')) {
+        const lowestTemp = Math.min(...chatbotForecastData.map(entry => entry.main.temp));
+        return `The lowest forecasted temperature is ${(lowestTemp - 273.15).toFixed(2)}°C.`;
+    }
+
+    if (input.includes('wind speed')) {
+        return `The current wind speed is ${chatbotCurrentWeather.wind.speed} m/s.`;
+    }
+
+    if (input.includes('weather now') || input.includes('current weather')) {
+        const description = chatbotCurrentWeather.weather[0].description;
+        return `The current weather is ${description}, with a temperature of ${(chatbotCurrentWeather.main.temp - 273.15).toFixed(2)}°C.`;
+    }
+
+    if (input.includes('forecast')) {
+        const tomorrow = chatbotForecastData[8]; // Assuming 3-hour intervals, index 8 is 24 hours from now
+        return `Tomorrow's forecast: ${tomorrow.weather[0].description} with a temperature of ${(tomorrow.main.temp - 273.15).toFixed(2)}°C.`;
+    }
+
+    // If it's not a specific weather query, return null
+    return null;
+}
+
+// Function to send chatbot response to UI
+function sendChatbotResponse(message) {
+    const messagesContainer = document.getElementById('chatbotMessages');
+    const messageElement = document.createElement('div');
+    messageElement.className = 'chatbot-message'; // Set class for bot response
+    messageElement.textContent = `${message}`;
+    messagesContainer.appendChild(messageElement);
+    
+    // Add a line break after the message
+    messagesContainer.appendChild(document.createElement('br'));
+}
+
+// Event Listeners for Chatbot
+document.addEventListener('DOMContentLoaded', (event) => {
+    const sendButton = document.getElementById('sendChatButton');
+    const chatInput = document.getElementById('chatInput');
+
+    if (sendButton && chatInput) {
+        sendButton.addEventListener('click', () => {
+            const input = chatInput.value;
+            handleUserInput(input);
+            chatInput.value = ''; // Clear input field
+        });
+
+        chatInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                const input = chatInput.value;
+                handleUserInput(input);
+                chatInput.value = ''; // Clear input field
+            }
+        });
+    }
+});
+
+// Event listener for the toggle switch
+document.getElementById('unit-toggle').addEventListener('change', function() {
+    const currentWeatherData = chatbotCurrentWeather; // Get current weather data
+    if (currentWeatherData) {
+        // Get the temperature unit based on the toggle state
+        const isCelsius = this.checked; // true if Celsius, false if Fahrenheit
+
+        // Update the current weather UI
+        updateCurrentWeatherUI(currentWeatherData, isCelsius);
+    }
+});

@@ -7,44 +7,136 @@
 
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Import map for Gemini API -->
+    <script type="importmap">
+        {
+          "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+          }
+        }
+    </script>
 </head>
 <body>
-    <div class="main-container">
-        <!-- Search bar at the top -->
-        <div class="search-bar">
-            <input type="text" id="cityInput" placeholder="Enter city name" />
-            <button onclick="searchWeather()">Search</button>
+    <!-- Side Pane -->
+    <div class="side-pane">
+        <img src="images/logo.png" alt="Logo" class="logo" />
+        <h1>Weather App</h1>
+        <div class="menu">
+            <button id="dashboardButton" class="side-paneButton">DASHBOARD</button>
+            <button id="tablesButton" class="side-paneButton">TABLES</button>
         </div>
+    </div>
 
-        <!-- Current Weather Box -->
-        <div class="current-weather-box">
-            <h2>Current Location Weather</h2>
-            <div id="weather" class="weather-info"></div>
-        </div>
-
-        <!-- 5-Day Forecast Table -->
-        <div class="forecast-container">
-            <h3>5-Day Weather Forecast</h3>
-            <div id="forecastGrid" class="forecast-grid"></div> <!-- Updated from table to grid -->
-            <div class="pagination">
-                <button id="prevBtn" disabled>Previous</button>
-                <span id="pageInfo">Page 1</span>
-                <button id="nextBtn">Next</button>
+    <div class="user-icon">
+        <img src="images/user-icon.png" alt="User Icon" />
+    </div>
+    
+    <!-- Dashboard Page Content -->
+    <div id="dashboardPage">
+        <div class="main-container">
+            <!-- Search bar at the top -->
+            <div class="search-bar">
+                <input type="text" id="cityInput" placeholder="Enter city name" />
+                <button id="searchButton">Search</button>
             </div>
-        </div>        
+
+            <div class="toggle-switch">
+                <input type="checkbox" id="unit-toggle" checked/>
+                <label for="unit-toggle" class="switch">
+                    <span id="Fahrenheit">Fahrenheit</span>
+                    <span class="slider"></span>
+                    <span id="degreeCelcius">°C</span>
+                </label>
+            </div>
+
+            <!-- Current Weather Box -->
+            <div class="current-weather-box">
+                <h2>Current Location Weather</h2>
+                <div id="weather" class="weather-info"></div>        
+            </div>
+        </div>
+
+        <!-- Temperature Charts Section -->
+        <div class="charts-container">
+            <h1>Temperature Charts</h1>
+            <div class="charts-row">
+                <!-- Vertical Bar Chart -->
+                <div class="chart-box">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <!-- Doughnut Chart -->
+                <div class="chart-box">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+                <!-- Line Chart -->
+                <div class="chart-box">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Charts Section -->
-    <div class="charts-container">
-        <h3>Temperature Charts</h3>
-        <!-- Vertical Bar Chart -->
-        <canvas id="barChart"></canvas>
-        <!-- Doughnut Chart -->
-        <canvas id="doughnutChart" width="400" height="400"></canvas>
-        <!-- Line Chart -->
-        <canvas id="lineChart"></canvas>
-    </div>
+    <!-- Tables Page Content (Initially Hidden) -->
+    <div id="tablesPage">
+        <div class="main-container2">
+            <!-- Search bar at the top -->
+            <div class="search-bar2">
+                <input type="text" id="cityInput2" placeholder="Enter city name" />
+                <button id="searchButton2">Search</button>
+            </div>
+    
+            <div class="toggle-switch2">
+                <input type="checkbox" id="unit-toggle2" checked/>
+                <label for="unit-toggle2" class="switch2">
+                    <span id="Fahrenheit2">Fahrenheit</span>
+                    <span class="slider2"></span>
+                    <span id="degreeCelcius2">°C</span>
+                </label>
+            </div>
+            
+            <div class="forecast-chat-container"> <!-- New flex container -->
+                <div class="forecast-container">
+                    <h3>5-Day Weather Forecast</h3>
+                    
+                    <button id="resetButton">Reset</button>
+    
+                    <div class="sortButtons">
+                        <button id="ascendingButton">Sort in Ascending Order</button>
+                        <button id="descendingButton">Sort in Descending Order</button>
+                    </div>
+                    
+                    <div class="filterButtons">
+                        <button id="filterRainyDaysButton">Filter for Rainy Days</button>
+                        <button id="highestTempButton">Show Highest Temperature</button>
+                    </div>
+    
+                    <div class="forecast-grid-wrapper"> <!-- New wrapper for scrolling -->
+                        <div id="forecastGrid" class="forecast-grid"></div>
+                    </div>
+    
+                    <div class="pagination">
+                        <button id="prevBtn" disabled>Previous</button>
+                        <span id="pageInfo">Page 1</span>
+                        <button id="nextBtn">Next</button>
+                    </div>
+                </div>
+    
+                <!-- Chatbot Section moved to the right -->
+                <div class="chatbot-container">
+                    <div class="chatbot-header">
+                        <h3>Weather Chatbot</h3>
+                    </div>
+                    <div class="chatbot-input">
+                        <input type="text" id="chatInput" placeholder="Ask me anything..." />
+                        <button id="sendChatButton">Send</button>
+                    </div>
+                    <div id="chatbotMessages" class="chatbot-messages"></div>
+                </div>
+            </div>
+        </div>
+    </div>    
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

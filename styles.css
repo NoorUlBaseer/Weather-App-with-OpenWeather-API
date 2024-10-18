@@ -6,16 +6,106 @@ body {
     padding: 20px; /* Added padding for spacing */
     display: block; /* Changed from flex to block for normal flow */
     min-height: 100vh; /* Allow body height to grow beyond viewport */
+    position: relative;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.side-pane {
+    background-color: #bba7f3;
+    color: white;
+    padding: 20px;
+    width: 275px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.8);
+    z-index: 10;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo {
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.side-pane h1 {
+    color: black;
+    margin-bottom: 0;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 75px;
+}
+
+.side-paneButton {
+    width: 100%;
+    padding: 10px 20px;
+    margin: 25px 0;
+    background-color: #007bff; /* Button background color */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease; /* Add transform for scale effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8); /* Subtle shadow for depth */
+}
+
+.side-paneButton:hover {
+    background-color: #0056b3; /* Hover background color */
+    color: white; /* Hover text color */
+    transform: scale(1.1); /* Scale up the button */
+}
+
+.side-paneButton:focus {
+    outline: none; /* Remove focus outline */
+}
+
+/* User icon styles */
+.user-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;  /* Adjust size as needed */
+    height: 60px; /* Adjust size as needed */
+    border-radius: 50%; /* Make it round */
+    overflow: hidden; /* Ensures image fits within the circle */
+    border: 10px solid #89CFF0; /* Circle border color */
+    display: flex; /* Centering the image */
+    align-items: center; /* Centering vertically */
+    justify-content: center; /* Centering horizontally */
+    cursor: pointer;
+    background-color: #89CFF0; /* Circle background color */
+}
+
+.user-icon img {
+    width: 100%; /* Make the image fit the container */
+    height: 100%; /* Make the image fit the container */
+    object-fit: cover; /* Ensure the image covers the container */
+}
+
+/* Adjust main container margin */
+.main-container {
+    margin-left: 250px; /* Add this margin to accommodate the width of the side pane */
+    padding: 20px; /* Add padding to the main content for better spacing */
+    max-width: calc(100% - 250px); /* Ensure the width does not exceed the viewport */
 }
 
 /* Search Bar Styles */
-.search-bar {
+.search-bar, .search-bar2 {
     display: flex;
     justify-content: center; /* Center-align the search bar */
-    margin-bottom: 30px;
 }
 
-.search-bar input {
+.search-bar input, .search-bar2 input {
     padding: 12px 20px; /* Increased padding for better aesthetics */
     font-size: 16px;
     border-radius: 50px; /* Rounded corners for input */
@@ -26,12 +116,12 @@ body {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
 }
 
-.search-bar input:focus {
+.search-bar input:focus, .search-bar2 input:focus {
     border-color: #0056b3; /* Change border color on focus */
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); /* Add glow effect */
 }
 
-.search-bar button {
+.search-bar button, .search-bar2 button {
     padding: 12px 30px; /* Increased padding for a larger button */
     font-size: 16px;
     background-color: #007bff;
@@ -41,16 +131,20 @@ body {
     cursor: pointer;
     margin-left: 10px; /* Space between input and button */
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8); /* Add shadow for depth */
 }
 
-.search-bar button:hover {
+.search-bar button:hover, .search-bar2 button:hover {
     background-color: #0056b3; /* Darker blue on hover */
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); /* Shadow on hover */
 }
 
-.search-bar button:focus {
+.search-bar button:focus, .search-bar2 button:focus {
     outline: none; /* Remove button outline on focus */
+}
+
+.search-bar2 {
+    margin-left: 300px;
 }
 
 /* Main container for layout */
@@ -59,6 +153,72 @@ body {
     width: 100%;
     margin: 0 auto; /* Center container horizontally */
     text-align: center;
+    margin-right: 375px;
+}
+
+.toggle-switch, .toggle-switch2 {
+    display: inline-block;
+    width: 100px;
+    height: 40px;
+    margin-bottom: 30px;
+    position: relative; /* Add this to position the labels */
+}
+
+.toggle-switch input, .toggle-switch2 input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch, .switch2 {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: grey;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.slider, .slider2 {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+input:checked + .switch .slider, input:checked + .switch2 .slider2 {
+    transform: translateX(60px);
+    background-color: white;
+}
+
+input:checked + .switch, input:checked + .switch2 {
+    background-color: #007bff;
+}
+
+.toggle-switch2 {
+    margin-left: 300px;
+}
+
+#Fahrenheit, #degreeCelcius, #Fahrenheit2, #degreeCelcius2 {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: black;
+    font-weight: bold;
+    font-size: 1rem; /* Adjust font size as needed */
+}
+
+#Fahrenheit, #Fahrenheit2 {
+    left: -95px; /* Adjust this value to position the label */
+}
+
+#degreeCelcius, #degreeCelcius2 {
+    right: -30px; /* Adjust this value to position the label */
 }
 
 /* Current Weather Box */
@@ -67,7 +227,6 @@ body {
     background-color: #6050DC;
     border-radius: 8px;
     padding: 20px;
-    margin-bottom: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     position: relative; /* Positioning for child elements */
 }
@@ -77,12 +236,105 @@ body {
     z-index: 1; /* Bring text in front of the background */
 }
 
+/* Temperature Charts Section */
+.charts-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    margin-left: 300px;
+}
+
+.charts-container h1 {
+    margin-bottom: 50px;
+    text-align: center;
+    width: 100%;
+}
+
+.charts-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    gap: 15px;
+}
+
+.chart-box {
+    width: 30%;
+    max-width: 400px;
+    margin: 0 1.5%;
+    background-color: rgba(96, 80, 220, 0.1); /* Light purple background */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-box canvas {
+    width: 100%;
+    height: auto;
+}
+
+/* Existing styles */
+.current-weather-box {
+    background-color: #6050DC;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.current-weather-box p {
+    position: relative;
+    z-index: 1;
+}
+
+#tablesPage {
+    display: none;
+    overflow-y: hidden;
+}
+
+/* Adjust main container margin */
+.main-container2 {
+    margin-left: 250px; /* Add this margin to accommodate the width of the side pane */
+    padding: 20px; /* Add padding to the main content for better spacing */
+    max-width: calc(100% - 250px); /* Ensure the width does not exceed the viewport */
+}
+
+/* Main container for layout */
+.main-container2 {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto; /* Center container horizontally */
+    text-align: center;
+    margin-right: 550px;
+}
+
+.forecast-chat-container {
+    display: flex; /* Use flexbox for layout */
+    width: 140%; /* Full width */
+}
+
 /* Forecast Table */
 .forecast-container {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+    flex: 2; /* Allow forecast container to grow */
+    margin-right: 20px; /* Space between forecast and chatbot */
+}
+
+/* New wrapper for the grid that will scroll */
+.forecast-grid-wrapper {
+    height: 440px; /* Set a fixed height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    margin-top: 10px; /* Space between header/buttons and grid */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari, and Edge */
+.forecast-grid-wrapper::-webkit-scrollbar {
+    display: none; /* Hide scrollbar */
 }
 
 /* Forecast Grid */
@@ -96,7 +348,7 @@ body {
 
 .forecast-box {
     /*background-color: rgba(0, 0, 0, 0.2);*/
-    background-color: #00CED1;
+    background-color: #bdaaf4;
     color: black; /* Text color */
     border-radius: 8px; /* Rounded corners */
     padding: 15px; /* Inner spacing */
@@ -108,6 +360,11 @@ body {
     margin-right: 3%; /* Increased horizontal space */
     display: inline-block;
     text-align: left; /* Left-align the text */
+}
+
+/* Increase the margin-top of the first row of forecast boxes */
+.forecast-grid .forecast-box:nth-child(-n+2) {
+    margin-top: 20px; /* Adjust this value to increase/decrease spacing */
 }
 
 .forecast-box:hover {
@@ -132,6 +389,56 @@ body {
     color: white;
     cursor: pointer;
     border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8); /* Add shadow for depth */
+    margin-top: 10px;
+}
+
+.pagination button:hover {
+    background-color: #0056b3;
+}
+
+/* Align sort buttons and filter buttons */
+.sortButtons, .filterButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 450px; /* Adjust width to limit the button alignment */
+}
+
+#ascendingButton, #descendingButton, #filterRainyDaysButton, #highestTempButton {
+    padding: 10px 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 0 10px; /* Add a little spacing between the buttons */
+    width: 200px; /* Set a fixed width for the buttons */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8); /* Add shadow for depth */
+}
+
+#ascendingButton:hover, #descendingButton:hover,
+#filterRainyDaysButton:hover, #highestTempButton:hover {
+    background-color: #0056b3;
+}
+
+#resetButton {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 20px;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8); /* Add shadow for depth */
+}
+
+#resetButton:hover {
+    background-color: #0056b3;
 }
 
 .pagination button:disabled {
@@ -139,45 +446,77 @@ body {
     cursor: not-allowed;
 }
 
-/* Charts Section */
-.charts-container {
+/* Chatbot Styles */
+.chatbot-container {
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    padding: 15px;
+    height: 715px; /* Set a fixed height for the chatbot */
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column; /* Arrange charts vertically */
-    align-items: center; /* Center-align charts */
-    margin-top: 30px;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure input stays at the top */
+    flex: 1; /* Allow chatbot container to grow */
+    width: 50px; /* Set a fixed width for the chatbot */
 }
 
-.charts-container canvas {
-    width: 100%;
-    max-width: 600px; /* Adjust width of charts */
-    margin: 20px 0; /* Space between the charts */
-    max-height: 500px;
+.chatbot-header {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
-/* Media Query for smaller screens */
-@media (max-width: 768px) {
-    .main-container {
-        padding: 10px;
-    }
+.chatbot-messages {
+    flex: 1; /* Take up remaining vertical space */
+    max-height: 550px; /* Set a max height for scrolling */
+    overflow-y: auto; /* Allow scrolling */
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    padding-right: 20px;
+    padding-left: 20px;
+}
 
-    .search-bar input {
-        width: 90%;
-    }
+/* User message style */
+.user-message {
+    color: blue; /* User messages in blue */
+    margin-bottom: 10px; /* Space between messages */
+    text-align: right;
+}
 
-    .forecast-table th, .forecast-table td {
-        padding: 8px;
-    }
+/* Chatbot message style */
+.chatbot-message {
+    color: green; /* Bot messages in green */
+    margin-bottom: 10px; /* Space between messages */
+    text-align: left;
+}
 
-    .pagination button {
-        padding: 8px 15px;
-    }
+.chatbot-input {
+    display: flex;
+    margin-bottom: 10px; /* Add spacing between input and message box */
+    justify-content: flex-end; /* Align items to the right */
+}
 
-    .charts-container {
-        flex-direction: column;
-        align-items: center;
-    }
+.chatbot-input button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px; /* Add space between button and input field */
+}
 
-    .charts-container canvas {
-        width: 90%;
-    }
+.chatbot-input input {
+    flex: 1; /* Take up all remaining space */
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.chatbot-input button:hover {
+    background-color: #0056b3;
 }
