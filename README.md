@@ -1,5 +1,4 @@
 # Weather App
-## Changes from main
 
 ![Weather App Logo](images/logo.png)  <!-- Update the image path if necessary -->
 
