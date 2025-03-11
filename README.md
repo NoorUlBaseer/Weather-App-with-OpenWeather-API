@@ -1,5 +1,5 @@
 # Weather App
-## Changes for the Update Readme Branch (SCD Lab 07) ((abc))
+## Changes for the Update Readme Branch (SCD Lab 07) ((abc)) (abc)
 
 ![Weather App Logo](images/logo.png)  <!-- Update the image path if necessary -->
 
